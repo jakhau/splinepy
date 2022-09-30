@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy.io &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="splinepy" href="splinepy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modulesandabstract.html">API references</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="splinepy.html">splinepy</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">splinepy.io</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-splinepy.io.json">splinepy.io.json</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-splinepy.io.mfem">splinepy.io.mfem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-splinepy.io.npz">splinepy.io.npz</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-splinepy.io.utils">splinepy.io.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.bezier">splinepy.bezier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.bspline">splinepy.bspline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.load">splinepy.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.log">splinepy.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.nurbs">splinepy.nurbs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.rational_bezier">splinepy.rational_bezier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.utils">splinepy.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modulesandabstract.html#splinepy-spline">splinepy._spline</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modulesandabstract.html">splinepy</a> &raquo;</li>
+          <li><a href="splinepy.html">splinepy</a> &raquo;</li>
+      <li>splinepy.io</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/splinepy.io.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="splinepy-io">
+<h1>splinepy.io<a class="headerlink" href="#splinepy-io" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="module-splinepy.io.json">
+<span id="splinepy-io-json"></span><h2>splinepy.io.json<a class="headerlink" href="#module-splinepy.io.json" title="Permalink to this heading"></a></h2>
+<p>Export splines in custom json format</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.json.export">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.json.</span></span><span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spline_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base64encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/json.html#export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.json.export" title="Permalink to this definition"></a></dt>
+<dd><p>Exports a list of arbitrary splines in json-format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – Export Filename</p></li>
+<li><p><strong>spline_list</strong> (<em>list</em>) – List of arbitrary Spline-Types</p></li>
+<li><p><strong>list_name</strong> (<em>str</em>) – Default is None and “SplineGroup” will be assigned. Used to define name.</p></li>
+<li><p><strong>base64encoding</strong> (<em>bool</em>) – Default is False. If True, encodes float type spline properties before
+saving.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output_dict</strong> – Dictornay data written into file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.json.load">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.json.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/json.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.json.load" title="Permalink to this definition"></a></dt>
+<dd><p>Loads splines from json file. Returns dict-splines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>spline_list</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-splinepy.io.mfem">
+<span id="splinepy-io-mfem"></span><h2>splinepy.io.mfem<a class="headerlink" href="#module-splinepy.io.mfem" title="Permalink to this heading"></a></h2>
+<p>Supports single nurbs export for mfem.</p>
+<p>Currently hardcoded for 2D-single-patch-splines.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.mfem.export">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.mfem.</span></span><span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nurbs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/mfem.html#export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.mfem.export" title="Permalink to this definition"></a></dt>
+<dd><p>Exports current nurbs in <cite>mfem</cite> format.</p>
+<p>IDs of MFEM Geometry types are:
+- Segment = 1
+- Square = 3
+- CUBS = 5</p>
+<p>Sections required are:
+- dimension  (space dim)
+- elements
+- boundary
+- edges
+- vertices
+- knotvectors
+- weights
+- FiniteElementSpace
+- FiniteElementCollection: &lt;name&gt;
+- VDim
+- Ordering (1?)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nurbs</strong> (<a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS" title="splinepy.nurbs.NURBS"><em>NURBS</em></a>) – </p></li>
+<li><p><strong>fname</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.mfem.export_cartesian">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.mfem.</span></span><span class="sig-name descname"><span class="pre">export_cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spline_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_functions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/mfem.html#export_cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.mfem.export_cartesian" title="Permalink to this definition"></a></dt>
+<dd><p>Export list of bezier splines in mfem export</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>string</em>) – file name</p></li>
+<li><p><strong>bezier_list</strong> (<em>list</em>) – list of bezier spline objects</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – tolerance to collapse two neighboring points</p></li>
+<li><p><strong>boundary_functions</strong> (<em>list</em><em>(</em><em>Callable</em><em>)</em>) – Functions that define boundaries</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.mfem.load">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.mfem.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/mfem.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.mfem.load" title="Permalink to this definition"></a></dt>
+<dd><p>Reads mfem spline and returns a spline.
+Again, only supports 2D single patch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>nurbs</strong> – dict ready to be used for init. ex) NURBS(<a href="#id1"><span class="problematic" id="id2">**</span></a>nurbs)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.mfem.mfem_index_mapping">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.mfem.</span></span><span class="sig-name descname"><span class="pre">mfem_index_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flat_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/mfem.html#mfem_index_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.mfem.mfem_index_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Returns index to properly reorganize control points/weights.</p>
+<dl>
+<dt>2D:</dt><dd><p>&lt;———————- 1.2</p>
+</dd>
+<dt>0.3 <em>——————————-</em> 0.2</dt><dd><div class="line-block">
+<div class="line"><a href="#id3"><span class="problematic" id="id4">|</span></a></div>
+</div>
+</dd>
+<dt>2.1 |   ——————–&gt; 3…. | 2.2</dt><dd><p>^  |   ——————–&gt; 3.8   |  ^
+|  |   ——————–&gt; 3.7   |  |
+|  |   ——————–&gt; 3.6   |  |
+|  |   ——————–&gt; 3.5   |  |
+|  |   ——————–&gt; 3.4   |  |
+|  |   ——————–&gt; 3.3   |  |
+|  |   ——————–&gt; 3.2   |  |
+|  |   ——————–&gt; 3.1   |  |</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a href="#id5"><span class="problematic" id="id6">|</span></a></div>
+</div>
+</div></blockquote>
+</dd>
+<dt>0.0 <em>——————————-</em> 0.1</dt><dd><p>———————–&gt; 1.1</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para_dim</strong> (<em>int</em>) – </p></li>
+<li><p><strong>degrees</strong> (<em>(</em><em>1D</em><em>) </em><em>array-like</em>) – </p></li>
+<li><p><strong>knot_vectors</strong> (<em>list</em>) – </p></li>
+<li><p><strong>flat_list</strong> (<em>bool</em>) – If false, each sections are returned in a separate list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>to_mfem</strong> (<em>(n,) np.ndarray</em>)</p></li>
+<li><p><strong>inverse</strong> (<em>(n,) np.ndarray</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.mfem.read_solution">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.mfem.</span></span><span class="sig-name descname"><span class="pre">read_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_nurbs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/mfem.html#read_solution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.mfem.read_solution" title="Permalink to this definition"></a></dt>
+<dd><p>Given solution and reference_nurbs, returns solution-nurbs-dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – </p></li>
+<li><p><strong>reference_nurbs</strong> (<a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS" title="splinepy.nurbs.NURBS"><em>NURBS</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>solution_nurbs</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-splinepy.io.npz">
+<span id="splinepy-io-npz"></span><h2>splinepy.io.npz<a class="headerlink" href="#module-splinepy.io.npz" title="Permalink to this heading"></a></h2>
+<p>npz io.</p>
+<dl class="simple">
+<dt>keys in raw files are:</dt><dd><ul class="simple">
+<li><p>control_points : (ncpts, dim) np.ndarray, float64</p></li>
+<li><p>degrees : (para_dim,) np.ndarray, int32</p></li>
+<li><p>knot_vectors : (1,) np.ndarray, str</p></li>
+<li><p>whatami : (1,) np.ndarray, str</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.npz.export">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.npz.</span></span><span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spline</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/npz.html#export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.npz.export" title="Permalink to this definition"></a></dt>
+<dd><p>Save spline as <cite>.npz</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – </p></li>
+<li><p><strong>spline</strong> (<a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline" title="splinepy.bspline.BSpline"><em>BSpline</em></a><em> or </em><a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS" title="splinepy.nurbs.NURBS"><em>NURBS</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.npz.load">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.npz.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/npz.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.npz.load" title="Permalink to this definition"></a></dt>
+<dd><p>Read spline in <cite>.npz</cite> form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>dict_spline</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-splinepy.io.utils">
+<span id="splinepy-io-utils"></span><h2>splinepy.io.utils<a class="headerlink" href="#module-splinepy.io.utils" title="Permalink to this heading"></a></h2>
+<p>io utils.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.utils.form_lines">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.utils.</span></span><span class="sig-name descname"><span class="pre">form_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/utils.html#form_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.utils.form_lines" title="Permalink to this definition"></a></dt>
+<dd><p>Formulate a string, taking each <a href="#id7"><span class="problematic" id="id8">*</span></a>args as a line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*args</strong> (<a href="#id9"><span class="problematic" id="id10">*</span></a>str) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>line_separated_str</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.utils.make_meaningful">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.utils.</span></span><span class="sig-name descname"><span class="pre">make_meaningful</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/utils.html#make_meaningful"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.utils.make_meaningful" title="Permalink to this definition"></a></dt>
+<dd><p>Trys to turn a str input a meaningful line. Returns False if it is not
+possible</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>) – </p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – str that defined comment section. “#” is default</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.io.utils.next_line">
+<span class="sig-prename descclassname"><span class="pre">splinepy.io.utils.</span></span><span class="sig-name descname"><span class="pre">next_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/io/utils.html#next_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.io.utils.next_line" title="Permalink to this definition"></a></dt>
+<dd><p>Strips and returns next meaningful line from the opened, readable file.
+It tries 513 times before it says it is the end. If it is end, it
+will return None.
+This is to prevent never ending while loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>_io.TextIoWrapper</em>) – </p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – A symbol that defines comment section. “#” is default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>next_meaningful_str</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="splinepy.html" class="btn btn-neutral float-left" title="splinepy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+
+splinepy.io
+===========
+
+
+.. toctree::
+   :maxdepth: 4
+
+
+
+
+splinepy.io.json
+----------------
+
+.. automodule:: splinepy.io.json
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.io.mfem
+----------------
+
+.. automodule:: splinepy.io.mfem
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.io.npz
+---------------
+
+.. automodule:: splinepy.io.npz
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.io.utils
+-----------------
+
+.. automodule:: splinepy.io.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

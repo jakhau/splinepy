@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy.bspline &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modulesandabstract.html">API references</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>splinepy.bspline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for splinepy.bspline</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">splinepy</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">splinepy._splinepy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">splinepy._spline</span> <span class="kn">import</span> <span class="n">Spline</span>
+<span class="kn">from</span> <span class="nn">splinepy.nurbs</span> <span class="kn">import</span> <span class="n">NURBS</span>
+<span class="kn">from</span> <span class="nn">splinepy.bezier</span> <span class="kn">import</span> <span class="n">Bezier</span>
+
+
+<div class="viewcode-block" id="BSpline"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline">[docs]</a><span class="k">class</span> <span class="nc">BSpline</span><span class="p">(</span><span class="n">Spline</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BSpline.__init__"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">degrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">knot_vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        BSpline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        degrees: (para_dim,) list-like</span>
+<span class="sd">        knot_vectors: (para_dim, n) list</span>
+<span class="sd">        control_points: (m, dim) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">degrees</span><span class="o">=</span><span class="n">degrees</span><span class="p">,</span>
+            <span class="n">knot_vectors</span><span class="o">=</span><span class="n">knot_vectors</span><span class="p">,</span>
+            <span class="n">control_points</span><span class="o">=</span><span class="n">control_points</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BSpline.extract_bezier_patches"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline.extract_bezier_patches">[docs]</a>    <span class="k">def</span> <span class="nf">extract_bezier_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract all knot spans as Bezier patches to perform further operations</span>
+<span class="sd">        such as compositions and multiplications</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns </span>
+<span class="sd">        -------</span>
+<span class="sd">        extracted Beziers : list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Extract bezier patches and create PyRationalBezier objects</span>
+        <span class="n">list_of_c_object_beziers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">extract_bezier_patches</span><span class="p">()</span>
+
+        <span class="c1"># Transform into Rational Bezier Splinepy objects</span>
+        <span class="n">extracted_bezier_patches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c_object_spline</span> <span class="ow">in</span> <span class="n">list_of_c_object_beziers</span><span class="p">:</span>
+            <span class="n">i_bezier</span> <span class="o">=</span> <span class="n">Bezier</span><span class="p">()</span>
+            <span class="n">i_bezier</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">c_object_spline</span>
+            <span class="n">i_bezier</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+            <span class="n">extracted_bezier_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i_bezier</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">extracted_bezier_patches</span></div>
+
+<div class="viewcode-block" id="BSpline.interpolate_curve"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline.interpolate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate_curve</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">query_points</span><span class="p">,</span>
+            <span class="n">degree</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">knot_vector</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">save_query</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolates BSpline Curve through query points.</span>
+<span class="sd">        Class method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        query_points: (n, 1-10) list-like</span>
+<span class="sd">        degree: int</span>
+<span class="sd">        centripetal: bool</span>
+<span class="sd">          (Optional) Default is True.</span>
+<span class="sd">        knot_vector: list</span>
+<span class="sd">          (Optional) Default is an empty list `[]`. List of `float`s.</span>
+<span class="sd">           If defined, tries to fit curve with given knot vector.</span>
+<span class="sd">        save_query: bool</span>
+<span class="sd">          (Optional) Default is True. Saves query points for plotting, or </span>
+<span class="sd">          whatever.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query_points</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">query_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">query_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">c_spline_class</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BSpline1P</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">D()&quot;</span>
+        <span class="n">c_spline</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">c_spline_class</span><span class="p">)</span>
+        <span class="n">c_spline</span><span class="o">.</span><span class="n">knot_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">knot_vector</span><span class="p">]</span>
+        <span class="n">c_spline</span><span class="o">.</span><span class="n">interpolate_curve</span><span class="p">(</span>
+            <span class="n">points</span><span class="o">=</span><span class="n">query_points</span><span class="p">,</span>
+            <span class="n">degree</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="n">centripetal</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">c_spline</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="s2">&quot;BSpline curve interpolation complete. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Your spline is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">whatami</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">save_query</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fitting_queries</span> <span class="o">=</span> <span class="n">query_points</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BSpline.approximate_curve"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline.approximate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">approximate_curve</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">query_points</span><span class="p">,</span>
+            <span class="n">degree</span><span class="p">,</span>
+            <span class="n">num_control_points</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">knot_vector</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">save_query</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">return_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Approximates BSpline Curve based on query points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        query_points: (n, 1-10) list-like</span>
+<span class="sd">        degree: int</span>
+<span class="sd">        num_control_points: int</span>
+<span class="sd">          Should be smaller than n. If it is same, the result is same as </span>
+<span class="sd">          interpolate.</span>
+<span class="sd">        centripetal: bool</span>
+<span class="sd">          (Optional) Default is True.</span>
+<span class="sd">        knot_vector: list</span>
+<span class="sd">          (Optional) Default is an empty list `[]`. List of `float`s. If</span>
+<span class="sd">          defined, tries to fit curve with given knot vector.</span>
+<span class="sd">        save_query: bool</span>
+<span class="sd">          (Optional) Default is True. Saves query points for plotting, or </span>
+<span class="sd">          whatever.</span>
+<span class="sd">        return_residual: bool</span>
+<span class="sd">          (Optional) Default is False. Returns Approximation residual.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        res: float</span>
+<span class="sd">          (Optional) Only returned, if `return_residual` is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query_points</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">query_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">query_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">c_spline_class</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BSpline1P</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">D()&quot;</span>
+        <span class="n">c_spline</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">c_spline_class</span><span class="p">)</span>
+        <span class="n">c_spline</span><span class="o">.</span><span class="n">knot_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">knot_vector</span><span class="p">]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">c_spline</span><span class="o">.</span><span class="n">approximate_curve</span><span class="p">(</span>
+            <span class="n">points</span><span class="o">=</span><span class="n">query_points</span><span class="p">,</span>
+            <span class="n">degree</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span>
+            <span class="n">num_control_points</span><span class="o">=</span><span class="n">num_control_points</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="n">centripetal</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">c_spline</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="s2">&quot;BSpline curve approximation complete. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Your spline is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">whatami</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Approximation residual: </span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">save_query</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fitting_queries</span> <span class="o">=</span> <span class="n">query_points</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">return_residual</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="BSpline.interpolate_surface"><a class="viewcode-back" href="../../splinepy.html#splinepy.bspline.BSpline.interpolate_surface">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate_surface</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">query_points</span><span class="p">,</span>
+            <span class="n">size_u</span><span class="p">,</span>
+            <span class="n">size_v</span><span class="p">,</span>
+            <span class="n">degree_u</span><span class="p">,</span>
+            <span class="n">degree_v</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">reorganize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">save_query</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolates BSpline Surface through query points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        query_points: (n, 1-10) list-like</span>
+<span class="sd">        size_u: int</span>
+<span class="sd">        size_v: int</span>
+<span class="sd">        degree_u: int</span>
+<span class="sd">        degree_v: int</span>
+<span class="sd">        centripetal: bool</span>
+<span class="sd">          (Optional) Default is True.</span>
+<span class="sd">        reorganize: bool</span>
+<span class="sd">          (Optional) Default is False. Reorganize control points, assuming they</span>
+<span class="sd">          are listed v-direction first, along u-direction.</span>
+<span class="sd">        save_query: bool</span>
+<span class="sd">          (Optional) Default is True. Saves query points for plotting, or </span>
+<span class="sd">          whatever.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query_points</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">query_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">query_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">c_spline_class</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BSpline2P</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">D()&quot;</span>
+        <span class="n">c_spline</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">c_spline_class</span><span class="p">)</span>
+        <span class="n">c_spline</span><span class="o">.</span><span class="n">interpolate_surface</span><span class="p">(</span>
+            <span class="n">points</span><span class="o">=</span><span class="n">query_points</span><span class="p">,</span>
+            <span class="n">size_u</span><span class="o">=</span><span class="n">size_u</span><span class="p">,</span>
+            <span class="n">size_v</span><span class="o">=</span><span class="n">size_v</span><span class="p">,</span>
+            <span class="n">degree_u</span><span class="o">=</span><span class="n">degree_u</span><span class="p">,</span>
+            <span class="n">degree_v</span><span class="o">=</span><span class="n">degree_v</span><span class="p">,</span>
+            <span class="n">centripetal</span><span class="o">=</span><span class="n">centripetal</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">c_spline</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="s2">&quot;BSpline surface interpolation complete. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Your spline is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">whatami</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">save_query</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fitting_queries</span> <span class="o">=</span> <span class="n">query_points</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+
+        <span class="c1"># Reorganize control points.</span>
+        <span class="k">if</span> <span class="n">reorganize</span><span class="p">:</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="n">size_v</span> <span class="o">*</span> <span class="n">u</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_v</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_u</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_points</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">save_query</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fitting_queries</span> <span class="o">=</span> <span class="n">query_points</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nurbs</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns NURBS version of current BSpline by defining all the weights as </span>
+<span class="sd">        1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        same_nurbs: NURBS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">same_nurbs</span> <span class="o">=</span> <span class="n">NURBS</span><span class="p">(</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">todict</span><span class="p">(),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">same_nurbs</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

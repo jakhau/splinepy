@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy._spline &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modulesandabstract.html">API references</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>splinepy._spline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for splinepy._spline</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Abstract Spline</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">splinepy</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">splinepy</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">splinepy</span> <span class="kn">import</span> <span class="n">_splinepy</span> <span class="k">as</span> <span class="n">core</span>
+<span class="kn">from</span> <span class="nn">splinepy._base</span> <span class="kn">import</span> <span class="n">SplinepyBase</span>
+
+
+<div class="viewcode-block" id="InputDimensionError"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.InputDimensionError">[docs]</a><span class="k">class</span> <span class="nc">InputDimensionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when input dimension does not match spline&#39;s internal dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<span class="k">class</span> <span class="nc">_RequiredProperties</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper class to hold required properties of each spline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># name mangling to make direct access very annoying</span>
+    <span class="n">__required_spline_properties</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Bezier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span> <span class="s2">&quot;control_points&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;RationalBezier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span> <span class="s2">&quot;control_points&quot;</span><span class="p">,</span> <span class="s2">&quot;weights&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;BSpline&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span> <span class="s2">&quot;knot_vectors&quot;</span><span class="p">,</span> <span class="s2">&quot;control_points&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;NURBS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span> <span class="s2">&quot;knot_vectors&quot;</span><span class="p">,</span> <span class="s2">&quot;control_points&quot;</span><span class="p">,</span> <span class="s2">&quot;weights&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">spline</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given splinepy.Spline, returns required properties.</span>
+<span class="sd">        Wraps `__getitem__`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        spline: Spline or type</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        required_spline_properties: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spline</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">spline</span><span class="p">)</span>
+
+        <span class="c1"># extract pure `type`</span>
+        <span class="n">s_type</span> <span class="o">=</span> <span class="n">spline</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spline</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="k">else</span> <span class="nb">type</span><span class="p">(</span><span class="n">spline</span><span class="p">)</span>
+
+        <span class="c1"># __getitem__ checks if it is supported</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">s_type</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">spline_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a name of spline type in str, returns required properties.</span>
+<span class="sd">        Checks if given spline type is supported.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        spline_type: str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        required_spline_properties: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># do we support this spline type?</span>
+        <span class="k">if</span> <span class="n">spline_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__required_spline_properties</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sorry, we don&#39;t have support for (</span><span class="si">{</span><span class="n">spline_type</span><span class="si">}</span><span class="s2">)-types.&quot;</span>
+                <span class="s2">&quot;Supported spline types are:&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__required_spline_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># copy to avoid inplace manipulation</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__required_spline_properties</span><span class="p">[</span><span class="n">spline_type</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">spline</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrapper of __call__ and __getitem__ as classmethod.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        spline: Spline or str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        required_spline_properties: list</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+<span class="sd">        &gt;&gt;&gt; myspline = NURBS(...)</span>
+<span class="sd">        &gt;&gt;&gt; requirements = RequiredSplineProperties.of(myspline)</span>
+<span class="sd">        &gt;&gt;&gt; requirements</span>
+<span class="sd">        [&#39;degrees&#39;, &#39;knot_vectors&#39;, &#39;control_points&#39;, &#39;weights&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spline</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">spline</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">spline</span><span class="p">)</span>
+
+
+<span class="c1"># initialize one for direct use</span>
+<span class="n">required_properties</span> <span class="o">=</span> <span class="n">_RequiredProperties</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Spline"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline">[docs]</a><span class="k">class</span> <span class="nc">Spline</span><span class="p">(</span><span class="n">SplinepyBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract Spline Class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;_degrees&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_knot_vectors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_control_points&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_weights&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_c_spline&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_para_dim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_dim&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<div class="viewcode-block" id="Spline.__init__"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">degrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">knot_vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Spline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        degrees: (para_dim,) list-like</span>
+<span class="sd">        knot_vectors: (para_dim, n) list</span>
+<span class="sd">        control_points: (m, dim) list-like</span>
+<span class="sd">        weights: (m,) list-like</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        -----------</span>
+<span class="sd">        whatami: str</span>
+<span class="sd">        para_dim: int</span>
+<span class="sd">        dim: int</span>
+<span class="sd">        degrees: np.ndarray</span>
+<span class="sd">        knot_vectors: list</span>
+<span class="sd">        control_points: np.ndarray</span>
+<span class="sd">        parametric_bounds: np.ndarray</span>
+<span class="sd">        control_point_bounds: np.ndarray</span>
+<span class="sd">        skip_update: bool</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="o">=</span> <span class="n">degrees</span>
+
+        <span class="c1"># Bezier has no kvs</span>
+        <span class="k">if</span> <span class="n">knot_vectors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span> <span class="o">=</span> <span class="n">knot_vectors</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span> <span class="o">=</span> <span class="n">control_points</span>
+
+        <span class="c1"># Only for NURBS</span>
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span></div>
+
+<div class="viewcode-block" id="Spline.clear"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear all properties.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;All attributes are cleared!&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">whatami</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Answers a deep philosophical question of &quot;what am i?&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        whatami: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">whatami</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Nothing&quot;</span>
+
+    <span class="nd">@whatami</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">whatami</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">how_dare_you</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sassily refuse to tell me what i am.</span>
+<span class="sd">        Totally unnecessary.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        how_dare_you: seriously</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logw</span><span class="p">(</span><span class="s2">&quot;Excuse me, you cannot tell me what I am.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">skip_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the status of skip_update switch</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        skip_update: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">skip_update</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@skip_update</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">skip_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_update</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default is that cpp syncs itself with python each time before it</span>
+<span class="sd">        executes any function. This is to deal with in-place changes of knot</span>
+<span class="sd">        vectors and control_points.</span>
+<span class="sd">        If you know that you aren&#39;t doing this (in-place changes),</span>
+<span class="sd">        set this to `True`, to avoid update/syncing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        skip_update: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">skip_update</span> <span class="o">=</span> <span class="n">skip_update</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">para_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns parametric dimension.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        para_dim: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_para_dim&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_para_dim</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns physical dimension.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        dim: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_dim&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns Degrees.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        degrees: (para_dim,) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_degrees&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_degrees</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@degrees</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degrees</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets Degrees.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        degrees: list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">degrees</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_degrees&quot;</span><span class="p">):</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_degrees&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_para_dim&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_para_dim&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># flatten copies</span>
+        <span class="n">degrees</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">degrees</span><span class="p">,</span> <span class="s2">&quot;int32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_para_dim</span> <span class="o">=</span> <span class="n">degrees</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">!=</span> <span class="n">degrees</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;Input dimension does not match spline&#39;s para_dim &quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_degrees</span> <span class="o">=</span> <span class="n">degrees</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degrees set: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">knot_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns knot vectors.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        knot_vectors: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_knot_vectors&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_knot_vectors</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@knot_vectors</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">knot_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knot_vectors</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set knot vectors.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        knot_vectors: list</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">knot_vectors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_knot_vectors&quot;</span><span class="p">):</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_knot_vectors&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_para_dim&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_para_dim&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knot_vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;knot_vectors should be a `list`!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_para_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">knot_vectors</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">knot_vectors</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;Input dimension does not match spline&#39;s para_dim &quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_knot_vectors</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">knot_vectors</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Knot vectors set:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;. knot vector length: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unique_knots</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns unique knots.</span>
+<span class="sd">        Computed using `np.unique`.</span>
+<span class="sd">        Does not store results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        unique_knots: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Computing unique knots using `np.unique`.&quot;</span><span class="p">)</span>
+        <span class="n">unique_knots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;Bezier&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span><span class="p">:</span>
+            <span class="n">unique_knots</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">:</span>
+                <span class="n">unique_knots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">unique_knots</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parametric_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns bounds of parametric_space.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        parametric_bounds: (2, para_dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Computing parametric_bounds&quot;</span><span class="p">)</span>
+        <span class="c1"># beziers</span>
+        <span class="k">if</span> <span class="s2">&quot;knot_vectors&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">]</span>
+
+        <span class="c1"># bsplines</span>
+        <span class="n">kvs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span>
+        <span class="k">if</span> <span class="n">kvs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">lower_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">upper_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">use_minmax</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">):</span>
+            <span class="c1"># in this case, `_check_and_update_c()` wasn&#39;t called.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="s2">&quot;Entries of `knot_vectors` has not been checked. &quot;</span>
+                <span class="s2">&quot;Values of `parametric_bounds` will be min and max.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">use_minmax</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">kv</span> <span class="ow">in</span> <span class="n">kvs</span><span class="p">:</span>
+            <span class="n">lower_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_minmax</span> <span class="k">else</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">upper_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_minmax</span> <span class="k">else</span> <span class="n">kv</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span><span class="p">))</span>
+
+    <span class="c1"># keep this until gustaf stops using knot_vector_bounds</span>
+    <span class="n">knot_vector_bounds</span> <span class="o">=</span> <span class="n">parametric_bounds</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns control points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        control_points_: (n, dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_control_points&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_points</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@control_points</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set control points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        control_points: (n, dim) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">control_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_control_points&quot;</span><span class="p">):</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_control_points&quot;</span><span class="p">)</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_dim&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">control_points</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span>
+            <span class="n">control_points</span><span class="p">,</span>
+            <span class="s2">&quot;float64&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">=</span> <span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">!=</span> <span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;Input dimension does not match spline&#39;s dim &quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_control_points</span> <span class="o">=</span> <span class="n">control_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> Control points set.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_lexsort_control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lexsorts control points.</span>
+<span class="sd">        Not always the solution.</span>
+<span class="sd">        Leading underscore to mark development/internal use.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        order: list</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`lexsort` control points (</span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">control_point_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns bounds of control points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        control_point_bounds: (2, dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Computing control_point_bounds&quot;</span><span class="p">)</span>
+        <span class="n">cps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">cps</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">cps</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns weights.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        self._weights: (n, 1) list-like</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_weights&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@weights</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set weights.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        weights: (n,) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_weights&quot;</span><span class="p">):</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_weights&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span>
+            <span class="n">weights</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of control points and number of weights does not &quot;</span>
+                    <span class="s2">&quot;match.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weights</span> <span class="o">=</span> <span class="n">weights</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> Weights set.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">control_mesh_resolutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns control mesh resolutions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        control_mesh_resolutions: list</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        TypeError: if one of the required properties to compute</span>
+<span class="sd">          control_mesh_resolutions is missing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmr</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Special case Bezier</span>
+        <span class="k">if</span> <span class="s2">&quot;Bezier&quot;</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">:</span>
+            <span class="n">cmr</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">kv</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">):</span>
+                <span class="n">cmr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cmr</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">required_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns required properties to define spline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        required_properties: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">required_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check_and_update_c</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check all available information before updating the backend</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">required_props</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span>
+
+        <span class="c1"># gather properties into dict while we loop through each props.</span>
+        <span class="c1"># will be used  to init core class later.</span>
+        <span class="n">dict_spline</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># Check if all data is available for spline type</span>
+        <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">required_props</span><span class="p">:</span>
+            <span class="n">tmp_rp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tmp_rp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                    <span class="s2">&quot;Not enough information to update cpp spline. &quot;</span>
+                    <span class="s2">&quot;Skipping update / removing existing backend spline.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">):</span>
+                    <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_c_spline&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># update</span>
+                <span class="n">dict_spline</span><span class="p">[</span><span class="n">rp</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_rp</span>
+
+        <span class="c1"># Check if enough knot vectors were given</span>
+        <span class="k">if</span> <span class="s2">&quot;knot_vectors&quot;</span> <span class="ow">in</span> <span class="n">required_props</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;Dimension mis-match between `degrees` and `knot_vectors`&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Check if knot vectors are large enough</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">kv</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                        <span class="s2">&quot;Not enough knots in knot vector along parametric&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; dimension </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># check if knots are in increasing order</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Knots of </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. &quot;</span>
+                        <span class="s2">&quot;knot vector are not in increasing order.&quot;</span>
+                    <span class="p">)</span>
+                <span class="c1"># we know that knot vector is sorted by now.</span>
+                <span class="c1"># check if knots are &gt;= 0.</span>
+                <span class="k">if</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. knot vector includes negative knots.&quot;</span>
+                    <span class="p">)</span>
+            
+        <span class="c1"># Check if required number of control points is present</span>
+        <span class="n">n_required_cps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_mesh_resolutions</span><span class="p">)</span>
+        <span class="n">n_defined_cps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">n_required_cps</span> <span class="o">!=</span> <span class="n">n_defined_cps</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;Number of control points invalid: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;expected </span><span class="si">{</span><span class="n">n_required_cps</span><span class="si">}</span><span class="s2">, but given </span><span class="si">{</span><span class="n">n_defined_cps</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># template splines are instantiated with following naming rules.</span>
+        <span class="n">c_spline_cls</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;core.</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="si">}</span><span class="s2">D&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">c_spline_cls</span><span class="p">)(</span><span class="o">**</span><span class="n">dict_spline</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads cpp spline and writes it here.</span>
+<span class="sd">        Probably get an error if cpp isn&#39;t ready for this.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">required_props</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span>
+
+        <span class="c1"># don&#39;t use setters here, as it will call `check_and_update_c` each</span>
+        <span class="c1"># time and it causes us to lose array ref.</span>
+        <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">required_props</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">rp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="p">,</span> <span class="n">rp</span><span class="p">))</span>
+
+        <span class="c1"># but, we still need to do setter&#39;s job.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_para_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">para_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="s2">&quot;Updated python spline. CPP spline and python spline are&quot;</span>
+            <span class="s2">&quot;now identical.&quot;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Spline.evaluate"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates spline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, para_dim) list-like</span>
+<span class="sd">        n_threads: int</span>
+<span class="sd">          Default is 1. If n_thread &gt; 1, it calls multithreading version of</span>
+<span class="sd">          `evaluate`. Parallel loop implemented in cpp.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        results: (n, dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current pametric dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Evaluating spline...&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_threads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">p_evaluate</span><span class="p">(</span>
+                <span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+                <span class="n">n_threads</span><span class="o">=</span><span class="n">n_threads</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.derivative"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.derivative">[docs]</a>    <span class="k">def</span> <span class="nf">derivative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates derivatives of spline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, para_dim) list-like</span>
+<span class="sd">        orders: (para_dim,) list-like</span>
+<span class="sd">        n_threads: int</span>
+<span class="sd">          Default is 1. If n_thread &gt; 1, it calls multithreading version of</span>
+<span class="sd">          `derivate`. Parallel loop implemented in cpp.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        results: (n, dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+        <span class="n">orders</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">orders</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current pametric dimension.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">orders</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`orders` does not match current pametric dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Evaluating derivatives of the spline...&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_threads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">p_derivative</span><span class="p">(</span>
+                <span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+                <span class="n">orders</span><span class="o">=</span><span class="n">orders</span><span class="p">,</span>
+                <span class="n">n_threads</span><span class="o">=</span><span class="n">n_threads</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">derivative</span><span class="p">(</span>
+                <span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+                <span class="n">orders</span><span class="o">=</span><span class="n">orders</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.basis_functions"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.basis_functions">[docs]</a>    <span class="k">def</span> <span class="nf">basis_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns basis function values and their support ids of given queries.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, para_dim) list-like</span>
+<span class="sd">        n_threads: int</span>
+<span class="sd">          Default is 1. Higher number is currently not supported. #TODO: DOIT</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        results: tuple</span>
+<span class="sd">          tuple of two elements.</span>
+<span class="sd">          first: (prod(degrees .+ 1)) array of basis function values.</span>
+<span class="sd">          second: support ids.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current pametric dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Evaluating basis functions&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">basis_functions</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.insert_knots"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.insert_knots">[docs]</a>    <span class="k">def</span> <span class="nf">insert_knots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametric_dimension</span><span class="p">,</span> <span class="n">knots</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inserts knots.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parametric_dimension: int</span>
+<span class="sd">        knots: list or float</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">parametric_dimension</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid parametric dimension to insert knots.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">knots</span> <span class="o">=</span> <span class="p">[</span><span class="n">knots</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">knots</span> <span class="o">=</span> <span class="n">knots</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;We couldn&#39;t convert input to `list`. Please give us `list`.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="n">parametric_dimension</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;One of the query knots not in valid knot range. (Too big)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="n">parametric_dimension</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;One of the query knots not in valid knot range. (Too small)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">insert_knots</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">parametric_dimension</span><span class="p">),</span>
+            <span class="n">knots</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inserted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span><span class="si">}</span><span class="s2"> knot(s).&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Spline.remove_knots"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.remove_knots">[docs]</a>    <span class="k">def</span> <span class="nf">remove_knots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametric_dimension</span><span class="p">,</span> <span class="n">knots</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tries to removes knots. If you&#39;ve compiled `splinepy` in `Debug`</span>
+<span class="sd">        and your removal request is not &quot;accepted&quot;, you will get an error.</span>
+<span class="sd">        See the comments for `Nurbs::remove_knots` @</span>
+<span class="sd">        `splinepy/src/nurbs.hpp` for more info.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parametric_dimension: int</span>
+<span class="sd">        knots: list or float</span>
+<span class="sd">        tolerance: float</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">parametric_dimension</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid parametric dimension to remove knots.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">knots</span> <span class="o">=</span> <span class="p">[</span><span class="n">knots</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">knots</span> <span class="o">=</span> <span class="n">knots</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;We couldn&#39;t convert input to `list`. Please give us `list`.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="n">parametric_dimension</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;One of the query knots not in valid knot range. (Too big)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="n">parametric_dimension</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;One of the query knots not in valid knot range. (Too small)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">total_knots_before</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parametric_dimension</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">remove_knots</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">parametric_dimension</span><span class="p">),</span>
+            <span class="n">knots</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Tried to remove </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">knots</span><span class="p">)</span><span class="si">}</span><span class="s2"> knot(s).&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="s2">&quot;Actually removed </span><span class="si">{nk}</span><span class="s2"> knot(s).&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">nk</span><span class="o">=</span><span class="p">(</span>
+                    <span class="n">total_knots_before</span>
+                    <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parametric_dimension</span><span class="p">)])</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.normalize_knot_vectors"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.normalize_knot_vectors">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_knot_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets all knot vectors into a range of [0,1], if applicable</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;knot_vectors&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">):</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span>
+                <span class="n">n_kv</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kv</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_knot_vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_kv</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Spline.permute_parametric_axes"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.permute_parametric_axes">[docs]</a>    <span class="k">def</span> <span class="nf">permute_parametric_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permutation_list</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Permutates the parametric dimensions</span>
+
+<span class="sd">        This function can be used, e.g., to  interchange the parametric</span>
+<span class="sd">        dimensions xi and eta in order to have them in the right orientation</span>
+<span class="sd">        (applications in boundary condition definition or mfem export)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        permutation_list : list</span>
+<span class="sd">            New order of parametric dimensions</span>
+<span class="sd">        inplace: bool</span>
+<span class="sd">            Default is True. If True, modifies spline inplace, else, returns</span>
+<span class="sd">            a modified_spline.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        modified_spline : type(self)</span>
+<span class="sd">            spline with reordered parametric dimensions. iff `inplace=True`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Data collector for new spline object</span>
+        <span class="n">spline_data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Sanity checks</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">permutation_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Permutation list incomprehensive&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">permutation_list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Permutation list invalid&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Permuting parametric axes...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Update knot_vectors where applicable</span>
+        <span class="k">if</span> <span class="s2">&quot;knot_vectors&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+            <span class="n">spline_data_dict</span><span class="p">[</span><span class="s2">&quot;knot_vectors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knot_vectors</span><span class="p">[</span><span class="n">permutation_list</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)]</span>
+        <span class="c1"># Update degrees</span>
+        <span class="n">spline_data_dict</span><span class="p">[</span><span class="s2">&quot;degrees&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">[</span><span class="n">permutation_list</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)]</span>
+
+        <span class="c1"># Retrieve control mesh resolutions</span>
+        <span class="n">ctps_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_mesh_resolutions</span>
+        <span class="n">new_ctps_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">ctps_dims</span><span class="p">[</span><span class="n">permutation_list</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)]</span>
+        <span class="n">n_ctps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Map global to local index</span>
+        <span class="c1"># i_glob = i + n_i * j  + n_i * n_j * k ...</span>
+        <span class="n">local_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="n">n_ctps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">global_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_ctps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i_p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">):</span>
+            <span class="n">local_indices</span><span class="p">[:,</span> <span class="n">i_p</span><span class="p">]</span> <span class="o">=</span> <span class="n">global_indices</span> <span class="o">%</span> <span class="n">ctps_dims</span><span class="p">[</span><span class="n">i_p</span><span class="p">]</span>
+            <span class="n">global_indices</span> <span class="o">-=</span> <span class="n">local_indices</span><span class="p">[:,</span> <span class="n">i_p</span><span class="p">]</span>
+            <span class="n">global_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor_divide</span><span class="p">(</span><span class="n">global_indices</span><span class="p">,</span> <span class="n">ctps_dims</span><span class="p">[</span><span class="n">i_p</span><span class="p">])</span>
+
+        <span class="c1"># Reorder indices</span>
+        <span class="n">local_indices</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">local_indices</span><span class="p">[:,</span> <span class="n">permutation_list</span><span class="p">]</span>
+
+        <span class="c1"># Rearange global to local</span>
+        <span class="n">global_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">local_indices</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_ctps_dims</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Get inverse mapping</span>
+        <span class="n">global_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">global_indices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;weights&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+            <span class="n">spline_data_dict</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">global_indices</span><span class="p">]</span>
+        <span class="n">spline_data_dict</span><span class="p">[</span><span class="s2">&quot;control_points&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">global_indices</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;  applying permutation inplace&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">spline_data_dict</span><span class="p">[</span><span class="n">rp</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;  returning permuted spline&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="o">**</span><span class="n">spline_data_dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.elevate_degree"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.elevate_degree">[docs]</a>    <span class="k">def</span> <span class="nf">elevate_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametric_dimension</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Elevate degree.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parametric_dimension: int</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">parametric_dimension</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid parametric dimension to elevate_degree.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">elevate_degree</span><span class="p">(</span><span class="n">parametric_dimension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Elevated </span><span class="si">{</span><span class="n">parametric_dimension</span><span class="si">}</span><span class="s2">.-dim. &quot;</span>
+            <span class="s2">&quot;degree of the spline.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Spline.reduce_degree"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.reduce_degree">[docs]</a>    <span class="k">def</span> <span class="nf">reduce_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parametric_dimension</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tries to reduce degree.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parametric_dimension: int</span>
+<span class="sd">        tolerance: float</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        reduced: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">parametric_dimension</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid parametric dimension to reduce degree.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">reduced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">reduce_degree</span><span class="p">(</span>
+            <span class="n">parametric_dimension</span><span class="p">,</span>
+            <span class="n">tolerance</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Tried to reduce </span><span class="si">{</span><span class="n">parametric_dimension</span><span class="si">}</span><span class="s2">.-dim. &quot;</span>
+            <span class="s2">&quot;degree of the spline.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">reduced</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Successfully reduced </span><span class="si">{</span><span class="n">parametric_dimension</span><span class="si">}</span><span class="s2">.-dim. &quot;</span>
+                <span class="s2">&quot;degree&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not reduce </span><span class="si">{</span><span class="n">parametric_dimension</span><span class="si">}</span><span class="s2">.-dim. &quot;</span>
+                <span class="s2">&quot;degree&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">reduced</span></div>
+
+<div class="viewcode-block" id="Spline.sample"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_resolutions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uniformly sample along each parametric dimensions from spline.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        query_resolutions: (n,) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        results: (math.product(query_resolutions), dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">query_resolutions</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span>
+            <span class="n">query_resolutions</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">query_resolutions</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;Query resolutions don&#39;t match current parametric dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">is_one_or_less</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">qr</span> <span class="ow">in</span> <span class="n">query_resolutions</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_one_or_less</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="s2">&quot;You cannot sample less than 2 points per each &quot;</span>
+                <span class="s2">&quot;parametric dimension.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Applying minimum sampling resolution 2.&quot;</span><span class="p">)</span>
+
+            <span class="n">query_resolutions</span><span class="p">[</span><span class="n">is_one_or_less</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Sampling </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">query_resolutions</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;points from spline.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">query_resolutions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.nearest_pcoord"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.nearest_pcoord">[docs]</a>    <span class="k">def</span> <span class="nf">nearest_pcoord</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">queries</span><span class="p">,</span>
+            <span class="n">kdt_resolutions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given physical coordinate, finds a parametric coordinate that maps to</span>
+<span class="sd">        the nearest physical coordinate. Also known as &quot;point inversion&quot;.</span>
+<span class="sd">        Makes initial guess by searching for the nearest points with kd-tree.</span>
+<span class="sd">        With `kdt_resolutions` value, physical points will be sampled to plant</span>
+<span class="sd">        a kd-tree. Probably useful if you have a lot of queries. The planted</span>
+<span class="sd">        kd-tree is saved in c_spline internally and will re-plant only if</span>
+<span class="sd">        `kdt_resolutions` differ from previous function call. Setting any</span>
+<span class="sd">        entry in `kdt_resolutions` will make sure no tree is planted. Be aware,</span>
+<span class="sd">        if there&#39;s no tree, this will raise runtime error from c++ side.</span>
+<span class="sd">        Turns out, it is very important to have a good initial guess for</span>
+<span class="sd">        newton method. Hence, this method is default.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, dim) list-like</span>
+<span class="sd">        kdt_resolutions: (para_dim) list-like</span>
+<span class="sd">          Default is None and will build [10] * para_dim tree.</span>
+<span class="sd">          If any entry is negative, it won&#39;t plant a tree.</span>
+<span class="sd">        nthreads: int</span>
+<span class="sd">          number of threads for parallel execution.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        nearest_pcoord: (n, para_dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kdt_resolutions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span>
+                <span class="s2">&quot;`kdt_resolutions` is None, &quot;</span>
+                <span class="s2">&quot;setting default resolution ([10] * para_dim).&quot;</span>
+            <span class="p">)</span>
+            <span class="n">kdt_resolutions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kdt_resolutions</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kdt_resolutions</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;`kdt_resolutions` does not match current para_dim&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`kdt_resolutions` should be list or np.ndarray.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">kdt_resolutions</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Searching for nearest parametric coord...&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">nearest_pcoord_kdt</span><span class="p">(</span>
+            <span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+            <span class="n">resolutions</span><span class="o">=</span><span class="n">kdt_resolutions</span><span class="p">,</span>
+            <span class="n">nthreads</span><span class="o">=</span><span class="n">n_threads</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.nearest_pcoord_midpoint"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.nearest_pcoord_midpoint">[docs]</a>    <span class="k">def</span> <span class="nf">nearest_pcoord_midpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given physical coordinate, finds a parametric coordinate that maps to</span>
+<span class="sd">        the nearest physical coordinate. Also known as &quot;point inversion&quot;.</span>
+<span class="sd">        Initial guess is mid point of parametric space. This tends to fail.</span>
+<span class="sd">        `nearest_pcoord` is recommended.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, dim) list-like</span>
+<span class="sd">        nthreads: int</span>
+<span class="sd">          number of threads for parallel execution.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        nearest_pcoord: (n, para_dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Searching for nearest parametric coord...&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">nearest_pcoord_midpoint</span><span class="p">(</span>
+            <span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+            <span class="n">nthreads</span><span class="o">=</span><span class="n">n_threads</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.export"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export spline. Please be aware of the limits of `.iges`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        fname: str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_c</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dirname</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.iges&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">write_iges</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.xml&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">write_xml</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.itd&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">write_irit</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.npz&quot;</span><span class="p">:</span>
+            <span class="n">io</span><span class="o">.</span><span class="n">npz</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.json&quot;</span><span class="p">:</span>
+            <span class="n">io</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;.mesh&quot;</span><span class="p">:</span>
+            <span class="c1"># mfem nurbs mesh.</span>
+            <span class="n">io</span><span class="o">.</span><span class="n">mfem</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;We can only export &quot;</span>
+                <span class="s2">&quot;&lt; .iges | .xml | .itd | .npz | .mesh | .json&gt; extentions&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logi</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exported current spline as </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Spline.todict"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.todict">[docs]</a>    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tolist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return current spline as dict. Copies all the dict values.</span>
+<span class="sd">        Does not check current status</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        tolist: bool</span>
+<span class="sd">          Default is False. Converts `np.ndarray` into lists.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        dict_spline: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Preparing dict_spline...&quot;</span><span class="p">)</span>
+        <span class="n">dict_spline</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="c1"># loop and copy entries.</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_properties</span><span class="p">:</span>
+            <span class="c1"># no prop? no prob. default is None</span>
+            <span class="n">tmp_prop</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># prepare copy if there&#39;s prop</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+                <span class="n">tmp_prop</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                <span class="n">should_copy</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># attr are either list or np.ndarray</span>
+                <span class="c1"># prepare list if needed.</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tmp_prop</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tolist</span><span class="p">:</span>
+                    <span class="n">tmp_prop</span> <span class="o">=</span> <span class="n">tmp_prop</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># copies</span>
+                    <span class="n">should_copy</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="n">should_copy</span><span class="p">:</span>
+                    <span class="n">tmp_prop</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_prop</span><span class="p">)</span>
+            <span class="c1"># update</span>
+            <span class="n">dict_spline</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_prop</span>
+
+        <span class="k">return</span> <span class="n">dict_spline</span></div>
+
+<div class="viewcode-block" id="Spline.copy"><a class="viewcode-back" href="../../modulesandabstract.html#splinepy._spline.Spline.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns deepcopy of self.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        new_spline: type(self)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># all the properties are deepcopyable</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="c1"># member function aliases for urgent situations</span>
+    <span class="c1"># `weights` is defined in `NURBS`</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">degrees</span>
+    <span class="n">kvs</span> <span class="o">=</span> <span class="n">knot_vectors</span>
+    <span class="n">cps</span> <span class="o">=</span> <span class="n">control_points</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">weights</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

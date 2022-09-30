@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="splinepy.io" href="splinepy.io.html" />
+    <link rel="prev" title="splinepy" href="modulesandabstract.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modulesandabstract.html">API references</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">splinepy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html">splinepy.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.bezier">splinepy.bezier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.bezier.Bezier"><code class="docutils literal notranslate"><span class="pre">Bezier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.bspline">splinepy.bspline</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.bspline.BSpline"><code class="docutils literal notranslate"><span class="pre">BSpline</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.load">splinepy.load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.load.load_solution"><code class="docutils literal notranslate"><span class="pre">load_solution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.load.load_splines"><code class="docutils literal notranslate"><span class="pre">load_splines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.log">splinepy.log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.log.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.log.debug"><code class="docutils literal notranslate"><span class="pre">debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.log.info"><code class="docutils literal notranslate"><span class="pre">info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.log.warning"><code class="docutils literal notranslate"><span class="pre">warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.nurbs">splinepy.nurbs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.nurbs.NURBS"><code class="docutils literal notranslate"><span class="pre">NURBS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.rational_bezier">splinepy.rational_bezier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.rational_bezier.RationalBezier"><code class="docutils literal notranslate"><span class="pre">RationalBezier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-splinepy.utils">splinepy.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.utils.abs_fname"><code class="docutils literal notranslate"><span class="pre">abs_fname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.utils.is_property"><code class="docutils literal notranslate"><span class="pre">is_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.utils.make_c_contiguous"><code class="docutils literal notranslate"><span class="pre">make_c_contiguous()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#splinepy.utils.raster_points"><code class="docutils literal notranslate"><span class="pre">raster_points()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modulesandabstract.html#splinepy-spline">splinepy._spline</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modulesandabstract.html">splinepy</a> &raquo;</li>
+      <li>splinepy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/splinepy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="splinepy">
+<h1>splinepy<a class="headerlink" href="#splinepy" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="splinepy.io.html">splinepy.io</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.json">splinepy.io.json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.json.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.json.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.mfem">splinepy.io.mfem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.export_cartesian"><code class="docutils literal notranslate"><span class="pre">export_cartesian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.mfem_index_mapping"><code class="docutils literal notranslate"><span class="pre">mfem_index_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.read_solution"><code class="docutils literal notranslate"><span class="pre">read_solution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.npz">splinepy.io.npz</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.npz.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.npz.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.utils">splinepy.io.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.form_lines"><code class="docutils literal notranslate"><span class="pre">form_lines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.make_meaningful"><code class="docutils literal notranslate"><span class="pre">make_meaningful()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.next_line"><code class="docutils literal notranslate"><span class="pre">next_line()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="module-splinepy.bezier">
+<span id="splinepy-bezier"></span><h2>splinepy.bezier<a class="headerlink" href="#module-splinepy.bezier" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="splinepy.bezier.Bezier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">splinepy.bezier.</span></span><span class="sig-name descname"><span class="pre">Bezier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bezier.html#Bezier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bezier.Bezier" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spline</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bezier.Bezier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bezier.html#Bezier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bezier.Bezier.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Bezier (Spline).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degrees</strong> (<em>(</em><em>para_dim</em><em>,</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>control_points</strong> (<em>(</em><em>m</em><em>, </em><em>dim</em><em>) </em><em>list-like</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bezier.Bezier.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bezier.html#Bezier.compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bezier.Bezier.compose" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the spline that formes the composition of the inner function
+spline (function argument), using the caller spline as the outer (or
+deformation function).</p>
+<dl class="simple">
+<dt>The resulting spline fulfils the equation</dt><dd><p>spline_self(inner_function(t)) = result(t)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inner_function</strong> (<em>spline with parametric dimension &lt;= 3</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>spline</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>New spline that describes composition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bezier.Bezier.recursive_evaluate">
+<span class="sig-name descname"><span class="pre">recursive_evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bezier.html#Bezier.recursive_evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bezier.Bezier.recursive_evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluates spline, classique (de Casteljau) way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>queries</strong> (<em>(</em><em>n</em><em>, </em><em>para_dim</em><em>) </em><em>list-like</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>results</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(n, dim) np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bezier.Bezier.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bezier.html#Bezier.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bezier.Bezier.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Overwrites basic sample routine by explicitly giving sampling location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resolution</strong> (<em>int</em><em> or </em><em>list</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sampled</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(prod(resolution), dim) np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-splinepy.bspline">
+<span id="splinepy-bspline"></span><h2>splinepy.bspline<a class="headerlink" href="#module-splinepy.bspline" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">splinepy.bspline.</span></span><span class="sig-name descname"><span class="pre">BSpline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spline</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>BSpline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degrees</strong> (<em>(</em><em>para_dim</em><em>,</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>knot_vectors</strong> (<em>(</em><em>para_dim</em><em>, </em><em>n</em><em>) </em><em>list</em>) – </p></li>
+<li><p><strong>control_points</strong> (<em>(</em><em>m</em><em>, </em><em>dim</em><em>) </em><em>list-like</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.approximate_curve">
+<span class="sig-name descname"><span class="pre">approximate_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_control_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centripetal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_residual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline.approximate_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline.approximate_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Approximates BSpline Curve based on query points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_points</strong> (<em>(</em><em>n</em><em>, </em><em>1-10</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>degree</strong> (<em>int</em>) – </p></li>
+<li><p><strong>num_control_points</strong> (<em>int</em>) – Should be smaller than n. If it is same, the result is same as
+interpolate.</p></li>
+<li><p><strong>centripetal</strong> (<em>bool</em>) – (Optional) Default is True.</p></li>
+<li><p><strong>knot_vector</strong> (<em>list</em>) – (Optional) Default is an empty list <cite>[]</cite>. List of <a href="#id1"><span class="problematic" id="id2">`</span></a>float`s. If
+defined, tries to fit curve with given knot vector.</p></li>
+<li><p><strong>save_query</strong> (<em>bool</em>) – (Optional) Default is True. Saves query points for plotting, or
+whatever.</p></li>
+<li><p><strong>return_residual</strong> (<em>bool</em>) – (Optional) Default is False. Returns Approximation residual.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – (Optional) Only returned, if <cite>return_residual</cite> is True.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.extract_bezier_patches">
+<span class="sig-name descname"><span class="pre">extract_bezier_patches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline.extract_bezier_patches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline.extract_bezier_patches" title="Permalink to this definition"></a></dt>
+<dd><p>Extract all knot spans as Bezier patches to perform further operations
+such as compositions and multiplications</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>extracted Beziers</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.interpolate_curve">
+<span class="sig-name descname"><span class="pre">interpolate_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centripetal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline.interpolate_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline.interpolate_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolates BSpline Curve through query points.
+Class method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_points</strong> (<em>(</em><em>n</em><em>, </em><em>1-10</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>degree</strong> (<em>int</em>) – </p></li>
+<li><p><strong>centripetal</strong> (<em>bool</em>) – (Optional) Default is True.</p></li>
+<li><p><strong>knot_vector</strong> (<em>list</em>) – <dl class="simple">
+<dt>(Optional) Default is an empty list <cite>[]</cite>. List of <a href="#id3"><span class="problematic" id="id4">`</span></a>float`s.</dt><dd><p>If defined, tries to fit curve with given knot vector.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>save_query</strong> (<em>bool</em>) – (Optional) Default is True. Saves query points for plotting, or
+whatever.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.interpolate_surface">
+<span class="sig-name descname"><span class="pre">interpolate_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree_v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centripetal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorganize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/bspline.html#BSpline.interpolate_surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.bspline.BSpline.interpolate_surface" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolates BSpline Surface through query points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_points</strong> (<em>(</em><em>n</em><em>, </em><em>1-10</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>size_u</strong> (<em>int</em>) – </p></li>
+<li><p><strong>size_v</strong> (<em>int</em>) – </p></li>
+<li><p><strong>degree_u</strong> (<em>int</em>) – </p></li>
+<li><p><strong>degree_v</strong> (<em>int</em>) – </p></li>
+<li><p><strong>centripetal</strong> (<em>bool</em>) – (Optional) Default is True.</p></li>
+<li><p><strong>reorganize</strong> (<em>bool</em>) – (Optional) Default is False. Reorganize control points, assuming they
+are listed v-direction first, along u-direction.</p></li>
+<li><p><strong>save_query</strong> (<em>bool</em>) – (Optional) Default is True. Saves query points for plotting, or
+whatever.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="splinepy.bspline.BSpline.nurbs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nurbs</span></span><a class="headerlink" href="#splinepy.bspline.BSpline.nurbs" title="Permalink to this definition"></a></dt>
+<dd><p>Returns NURBS version of current BSpline by defining all the weights as
+1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>same_nurbs</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#splinepy.nurbs.NURBS" title="splinepy.nurbs.NURBS">NURBS</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-splinepy.load">
+<span id="splinepy-load"></span><h2>splinepy.load<a class="headerlink" href="#module-splinepy.load" title="Permalink to this heading"></a></h2>
+<p>splinepy/splinepy/load.py</p>
+<p>Single function file containing <cite>load_splines</cite>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.load.load_solution">
+<span class="sig-prename descclassname"><span class="pre">splinepy.load.</span></span><span class="sig-name descname"><span class="pre">load_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_spline</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/load.html#load_solution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.load.load_solution" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a solution file and returns a solution spline.
+If output is spline, use load_splines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – </p></li>
+<li><p><strong>reference_spline</strong> (<a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline"><em>Spline</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>solution_spline</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline">Spline</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.load.load_splines">
+<span class="sig-prename descclassname"><span class="pre">splinepy.load.</span></span><span class="sig-name descname"><span class="pre">load_splines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/load.html#load_splines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.load.load_splines" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Loads spline files of extension</dt><dd><ul class="simple">
+<li><p><cite>.iges</cite></p></li>
+<li><p><cite>.xml</cite></p></li>
+<li><p><cite>.itd</cite></p></li>
+<li><p><cite>.json</cite></p></li>
+<li><p><cite>.npz</cite></p></li>
+<li><p><cite>.mesh</cite> #only 2D-single-patch.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – </p></li>
+<li><p><strong>as_dict</strong> (<em>bool</em>) – Default is False. If True, returns spline properties as dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>splines</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of BSpline/NURBS or dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-splinepy.log">
+<span id="splinepy-log"></span><h2>splinepy.log<a class="headerlink" href="#module-splinepy.log" title="Permalink to this heading"></a></h2>
+<p>splinepy/splinepy/log.py
+Thin logging wrapper.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.log.configure">
+<span class="sig-prename descclassname"><span class="pre">splinepy.log.</span></span><span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/log.html#configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.log.configure" title="Permalink to this definition"></a></dt>
+<dd><p>Logging configurator.
+:param debug:
+:type debug: bool
+:param logfile:
+:type logfile: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.log.debug">
+<span class="sig-prename descclassname"><span class="pre">splinepy.log.</span></span><span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/log.html#debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.log.debug" title="Permalink to this definition"></a></dt>
+<dd><p>Debug logger.
+:param *log:
+:type *log: <a href="#id5"><span class="problematic" id="id6">*</span></a>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.log.info">
+<span class="sig-prename descclassname"><span class="pre">splinepy.log.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/log.html#info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.log.info" title="Permalink to this definition"></a></dt>
+<dd><p>Info logger.
+:param *log:
+:type *log: <a href="#id7"><span class="problematic" id="id8">*</span></a>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.log.warning">
+<span class="sig-prename descclassname"><span class="pre">splinepy.log.</span></span><span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/log.html#warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.log.warning" title="Permalink to this definition"></a></dt>
+<dd><p>warning logger.
+:param *log:
+:type *log: <a href="#id9"><span class="problematic" id="id10">*</span></a>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-splinepy.nurbs">
+<span id="splinepy-nurbs"></span><h2>splinepy.nurbs<a class="headerlink" href="#module-splinepy.nurbs" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="splinepy.nurbs.NURBS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">splinepy.nurbs.</span></span><span class="sig-name descname"><span class="pre">NURBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/nurbs.html#NURBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.nurbs.NURBS" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spline</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.nurbs.NURBS.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knot_vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/nurbs.html#NURBS.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.nurbs.NURBS.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>NURBS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degrees</strong> (<em>(</em><em>para_dim</em><em>,</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>knot_vectors</strong> (<em>(</em><em>para_dim</em><em>, </em><em>n</em><em>) </em><em>list</em>) – </p></li>
+<li><p><strong>control_points</strong> (<em>(</em><em>m</em><em>, </em><em>dim</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>weights</strong> (<em>(</em><em>m</em><em>,</em><em>) </em><em>list-like</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.nurbs.NURBS.extract_bezier_patches">
+<span class="sig-name descname"><span class="pre">extract_bezier_patches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/nurbs.html#NURBS.extract_bezier_patches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.nurbs.NURBS.extract_bezier_patches" title="Permalink to this definition"></a></dt>
+<dd><p>Extract all knot spans as Bezier patches to perform further operations
+such as compositions and multiplications</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>extracted Beziers</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-splinepy.rational_bezier">
+<span id="splinepy-rational-bezier"></span><h2>splinepy.rational_bezier<a class="headerlink" href="#module-splinepy.rational_bezier" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="splinepy.rational_bezier.RationalBezier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">splinepy.rational_bezier.</span></span><span class="sig-name descname"><span class="pre">RationalBezier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/rational_bezier.html#RationalBezier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.rational_bezier.RationalBezier" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline" title="splinepy._spline.Spline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spline</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.rational_bezier.RationalBezier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/rational_bezier.html#RationalBezier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.rational_bezier.RationalBezier.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>RationalBezier (Spline).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degrees</strong> (<em>(</em><em>para_dim</em><em>,</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>control_points</strong> (<em>(</em><em>m</em><em>, </em><em>dim</em><em>) </em><em>list-like</em>) – </p></li>
+<li><p><strong>weights</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.rational_bezier.RationalBezier.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/rational_bezier.html#RationalBezier.compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.rational_bezier.RationalBezier.compose" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the spline that formes the composition of the inner function
+spline (function argument), using the caller spline as the outer (or
+deformation function).</p>
+<dl class="simple">
+<dt>The resulting spline fulfils the equation</dt><dd><p>spline_self(inner_function(t)) = result(t)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inner_function</strong> (<em>spline with parametric dimension &lt;= 3</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>spline</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>New spline that describes composition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="splinepy.rational_bezier.RationalBezier.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/rational_bezier.html#RationalBezier.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.rational_bezier.RationalBezier.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Overwrites basic sample routine by explicitly giving sampling location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resolution</strong> (<em>int</em><em> or </em><em>list</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sampled</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(prod(resolution), dim) np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-splinepy.utils">
+<span id="splinepy-utils"></span><h2>splinepy.utils<a class="headerlink" href="#module-splinepy.utils" title="Permalink to this heading"></a></h2>
+<p>splinelibpy/splinelibpy/utils.py</p>
+<p>Utility functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.utils.abs_fname">
+<span class="sig-prename descclassname"><span class="pre">splinepy.utils.</span></span><span class="sig-name descname"><span class="pre">abs_fname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/utils.html#abs_fname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.utils.abs_fname" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if fname is absolute. If not, returns abspath. Tilde safe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>abs_fname</strong> – Maybe same to fname, maybe not.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.utils.is_property">
+<span class="sig-prename descclassname"><span class="pre">splinepy.utils.</span></span><span class="sig-name descname"><span class="pre">is_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/utils.html#is_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.utils.is_property" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if property exist in given dict. If not add a debug log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_dict</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>key</strong> (<em>str</em>) – </p></li>
+<li><p><strong>class_name</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>is_property</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.utils.make_c_contiguous">
+<span class="sig-prename descclassname"><span class="pre">splinepy.utils.</span></span><span class="sig-name descname"><span class="pre">make_c_contiguous</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/utils.html#make_c_contiguous"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.utils.make_c_contiguous" title="Permalink to this definition"></a></dt>
+<dd><p>Make given array like object a c contiguous np.ndarray.
+dtype is optional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>array-like</em>) – </p></li>
+<li><p><strong>dtype</strong> (<em>type</em><em> or </em><em>str</em>) – (Optional) <cite>numpy</cite> interpretable type or str, describing type.
+Difference is that type will always return a copy and str will only copy
+if types doesn’t match.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>c_contiguous_array</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="splinepy.utils.raster_points">
+<span class="sig-prename descclassname"><span class="pre">splinepy.utils.</span></span><span class="sig-name descname"><span class="pre">raster_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolutions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/splinepy/utils.html#raster_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#splinepy.utils.raster_points" title="Permalink to this definition"></a></dt>
+<dd><p>Simple wraper of np.mgrid to extract raster points of desired bounds and
+resolutions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bounds</strong> (<em>(</em><em>2</em><em>, </em><em>d</em><em>) </em><em>array-like</em>) – float</p></li>
+<li><p><strong>resolutions</strong> (<em>(</em><em>d</em><em>,</em><em>) </em><em>array-like</em>) – int. It will be casted to int.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>raster_vertices</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Vertices</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modulesandabstract.html" class="btn btn-neutral float-left" title="splinepy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="splinepy.io.html" class="btn btn-neutral float-right" title="splinepy.io" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

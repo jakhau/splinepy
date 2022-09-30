@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy.bezier &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modulesandabstract.html">API references</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>splinepy.bezier</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for splinepy.bezier</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">splinepy</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">splinepy._splinepy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">splinepy._spline</span> <span class="kn">import</span> <span class="n">Spline</span>
+
+<div class="viewcode-block" id="Bezier"><a class="viewcode-back" href="../../splinepy.html#splinepy.bezier.Bezier">[docs]</a><span class="k">class</span> <span class="nc">Bezier</span><span class="p">(</span><span class="n">Spline</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Bezier.__init__"><a class="viewcode-back" href="../../splinepy.html#splinepy.bezier.Bezier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bezier (Spline).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        degrees: (para_dim,) list-like</span>
+<span class="sd">        control_points: (m, dim) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">degrees</span><span class="o">=</span><span class="n">degrees</span><span class="p">,</span>
+            <span class="n">control_points</span><span class="o">=</span><span class="n">control_points</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bezier.recursive_evaluate"><a class="viewcode-back" href="../../splinepy.html#splinepy.bezier.Bezier.recursive_evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">recursive_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates spline, classique (de Casteljau) way.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        queries: (n, para_dim) list-like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        results: (n, dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">whatami</span> <span class="o">==</span> <span class="s2">&quot;Nothing&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_c_contiguous</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">queries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputDimensionError</span><span class="p">(</span>
+                <span class="s2">&quot;`queries` does not match current pametric dimension.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logd</span><span class="p">(</span><span class="s2">&quot;Evaluating spline...&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">recursive_evaluate</span><span class="p">(</span><span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bezier.sample"><a class="viewcode-back" href="../../splinepy.html#splinepy.bezier.Bezier.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overwrites basic sample routine by explicitly giving sampling location.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        resolution: int or list</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        sampled: (prod(resolution), dim) np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="n">resolution</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)]</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Invalid resolution length. Should match para_dim&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;resolution only accept list, np.ndarray or int.&quot;</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">raster_points</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="mf">0.</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)],</span>
+                <span class="p">[</span><span class="mf">1.</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span><span class="p">)],</span>
+            <span class="p">],</span>
+            <span class="n">resolution</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overloads multiplication between splines with different types of</span>
+<span class="sd">        degrees</span>
+
+<span class="sd">        The resulting spline fulfills the equation</span>
+<span class="sd">          factora(t) * factorb(t) = result(t)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        factor :  float or spline with compatible dimensionality</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spline : New spline with updated types</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">Bezier</span><span class="p">(</span>
+              <span class="n">control_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_control_points</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span>
+              <span class="n">degrees</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_degrees</span>
+          <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">factor</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_degrees</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">factor</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
+                    <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">multiply_with_spline</span><span class="p">(</span>
+                      <span class="n">factor</span><span class="o">.</span><span class="n">_c_spline</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">factor</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">multiply_with_scalar_spline</span><span class="p">(</span>
+                        <span class="n">factor</span><span class="o">.</span><span class="n">_c_spline</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">res_c_spl</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">multiply_with_scalar_spline</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                  <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+                <span class="c1"># Copy the c spline to the python object</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)()</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">res_c_spl</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Multiplication with inequal parametric dimensions&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Multiplication with unknown type requested.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summand</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the spline that formes the sum of the summand and the</span>
+<span class="sd">        current spline (function argument)</span>
+
+<span class="sd">        The resulting spline fulfils the equation</span>
+<span class="sd">          self(t) + summand(t) = result(t)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        summand : Bezier</span>
+<span class="sd">          spline with same parametric and physical dimension</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spline : Bezier</span>
+<span class="sd">          New spline that describes sum</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">summand</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+          <span class="k">if</span> <span class="p">(</span>
+              <span class="n">summand</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">para_dim</span>
+              <span class="ow">and</span> <span class="n">summand</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+          <span class="p">):</span>
+              <span class="c1"># Calculate Spline sum</span>
+              <span class="n">resulting_c_spline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">add_spline</span><span class="p">(</span>
+                  <span class="n">summand</span><span class="o">.</span><span class="n">_c_spline</span>
+              <span class="p">)</span>
+
+              <span class="c1"># Copy the c spline to the python object</span>
+              <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)()</span>
+              <span class="n">result</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">resulting_c_spline</span>
+              <span class="n">result</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+              <span class="k">return</span> <span class="n">result</span>
+
+          <span class="k">else</span> <span class="p">:</span>
+              <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Dimension Mismatch.&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Sum must be formed between Bezier Splines&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Bezier.compose"><a class="viewcode-back" href="../../splinepy.html#splinepy.bezier.Bezier.compose">[docs]</a>    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inner_function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the spline that formes the composition of the inner function</span>
+<span class="sd">        spline (function argument), using the caller spline as the outer (or</span>
+<span class="sd">        deformation function).</span>
+
+<span class="sd">        The resulting spline fulfils the equation</span>
+<span class="sd">          spline_self(inner_function(t)) = result(t)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inner_function :  spline with parametric dimension &lt;= 3</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spline : New spline that describes composition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inner_function</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_line_pp</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_surface_pp</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_volume_pp</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Compositions with high&quot;</span>
+                    <span class="s2">&quot; parametric dimensions not supported.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Copy the c spline to the python object</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">inner_function</span><span class="p">)()</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">res_c_spl</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="s2">&quot;RationalBezier&quot;</span> <span class="ow">in</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">whatami</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_line_pr</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_surface_pr</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">inner_function</span><span class="o">.</span><span class="n">para_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">res_c_spl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_spline</span><span class="o">.</span><span class="n">compose_volume_pr</span><span class="p">(</span>
+                    <span class="n">inner_function</span><span class="o">.</span><span class="n">_c_spline</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Compositions with high&quot;</span>
+                    <span class="s2">&quot; parametric dimensions not supported.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Copy the c spline to the python object</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">inner_function</span><span class="p">)()</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">_c_spline</span> <span class="o">=</span> <span class="n">res_c_spl</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">_update_p</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">result</span>
+            
+
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Composisiton must be formed with Bezier Splines&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

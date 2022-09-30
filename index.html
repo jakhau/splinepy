@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>splinepy &mdash; splinepy 0.0.3 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="CONTRIBUTING.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> splinepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modulesandabstract.html">API references</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">splinepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>splinepy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="splinepy">
+<h1>splinepy<a class="headerlink" href="#splinepy" title="Permalink to this heading"></a></h1>
+<p>TEST version of docs.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="id1">
+<h1>splinepy<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+<a class="reference external image-reference" href="https://github.com/tataratat/splinepy/actions"><img alt="workflow" src="https://github.com/tataratat/splinepy/actions/workflows/main.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/splinepy"><img alt="PyPI version" src="https://badge.fury.io/py/splinepy.svg" /></a>
+<p>Python Bezier, BSpline and NURBS library with C++ backend, <a class="reference external" href="https://github.com/tataratat/bezman">bezman</a> and <a class="reference external" href="https://github.com/tataratat/SplineLib">SplineLib</a>.</p>
+<section id="install-guide">
+<h2>Install guide<a class="headerlink" href="#install-guide" title="Permalink to this heading"></a></h2>
+<p>Option 1: <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">splinepy</span>
+</pre></div>
+</div>
+<p>It is also possible to install current development version. It requires that your system has a compiler that supports C++17 or higher (It is tested with gcc-10.3 and clang-12).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">tataratat</span><span class="o">/</span><span class="n">splinepy</span><span class="o">.</span><span class="n">git</span><span class="nd">@main</span> <span class="o">-</span><span class="n">vvv</span>
+</pre></div>
+</div>
+<p>The last part <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> is not necessary, but we suggest using it, since you can see the build progress. In other words, source builds takes quite long and we are working to shorten this!</p>
+<p>Option 2: <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> <span class="raw-html-md"><br /></span>
+You can locally compile and install using <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.
+This requires C++20 (C++17 for release mode) compatible C++ compiler
+and cmake version 3.16 or higher.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">tataratat</span><span class="o">/</span><span class="n">splinepy</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">splinepy</span>
+<span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span>
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</section>
+<section id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Coming Soon!
+</pre></div>
+</div>
+<p>Test version of documentations are available <a class="reference external" href="https://tataratat.github.io/splinepy">here</a></p>
+</section>
+</section>
+<section id="sources">
+<h1>Sources<a class="headerlink" href="#sources" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://github.com/tataratat/splinepy">Github</a></li>
+</ul>
+</div>
+</section>
+<section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contiributing</a></li>
+</ul>
+</div>
+</section>
+<section id="library">
+<h1>Library<a class="headerlink" href="#library" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modulesandabstract.html">API references</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splinepy.html">splinepy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.io.html">splinepy.io</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.json">splinepy.io.json</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.json.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.json.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.mfem">splinepy.io.mfem</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.export_cartesian"><code class="docutils literal notranslate"><span class="pre">export_cartesian()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.mfem_index_mapping"><code class="docutils literal notranslate"><span class="pre">mfem_index_mapping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.mfem.read_solution"><code class="docutils literal notranslate"><span class="pre">read_solution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.npz">splinepy.io.npz</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.npz.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.npz.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.io.html#module-splinepy.io.utils">splinepy.io.utils</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.form_lines"><code class="docutils literal notranslate"><span class="pre">form_lines()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.make_meaningful"><code class="docutils literal notranslate"><span class="pre">make_meaningful()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.io.html#splinepy.io.utils.next_line"><code class="docutils literal notranslate"><span class="pre">next_line()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.bezier">splinepy.bezier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.bezier.Bezier"><code class="docutils literal notranslate"><span class="pre">Bezier</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bezier.Bezier.__init__"><code class="docutils literal notranslate"><span class="pre">Bezier.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bezier.Bezier.compose"><code class="docutils literal notranslate"><span class="pre">Bezier.compose()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bezier.Bezier.recursive_evaluate"><code class="docutils literal notranslate"><span class="pre">Bezier.recursive_evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bezier.Bezier.sample"><code class="docutils literal notranslate"><span class="pre">Bezier.sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.bspline">splinepy.bspline</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline"><code class="docutils literal notranslate"><span class="pre">BSpline</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.__init__"><code class="docutils literal notranslate"><span class="pre">BSpline.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.approximate_curve"><code class="docutils literal notranslate"><span class="pre">BSpline.approximate_curve()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.extract_bezier_patches"><code class="docutils literal notranslate"><span class="pre">BSpline.extract_bezier_patches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.interpolate_curve"><code class="docutils literal notranslate"><span class="pre">BSpline.interpolate_curve()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.interpolate_surface"><code class="docutils literal notranslate"><span class="pre">BSpline.interpolate_surface()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.bspline.BSpline.nurbs"><code class="docutils literal notranslate"><span class="pre">BSpline.nurbs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.load">splinepy.load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.load.load_solution"><code class="docutils literal notranslate"><span class="pre">load_solution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.load.load_splines"><code class="docutils literal notranslate"><span class="pre">load_splines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.log">splinepy.log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.log.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.log.debug"><code class="docutils literal notranslate"><span class="pre">debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.log.info"><code class="docutils literal notranslate"><span class="pre">info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.log.warning"><code class="docutils literal notranslate"><span class="pre">warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.nurbs">splinepy.nurbs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS"><code class="docutils literal notranslate"><span class="pre">NURBS</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS.__init__"><code class="docutils literal notranslate"><span class="pre">NURBS.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.nurbs.NURBS.extract_bezier_patches"><code class="docutils literal notranslate"><span class="pre">NURBS.extract_bezier_patches()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.rational_bezier">splinepy.rational_bezier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.rational_bezier.RationalBezier"><code class="docutils literal notranslate"><span class="pre">RationalBezier</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.rational_bezier.RationalBezier.__init__"><code class="docutils literal notranslate"><span class="pre">RationalBezier.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.rational_bezier.RationalBezier.compose"><code class="docutils literal notranslate"><span class="pre">RationalBezier.compose()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="splinepy.html#splinepy.rational_bezier.RationalBezier.sample"><code class="docutils literal notranslate"><span class="pre">RationalBezier.sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="splinepy.html#module-splinepy.utils">splinepy.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.utils.abs_fname"><code class="docutils literal notranslate"><span class="pre">abs_fname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.utils.is_property"><code class="docutils literal notranslate"><span class="pre">is_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.utils.make_c_contiguous"><code class="docutils literal notranslate"><span class="pre">make_c_contiguous()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="splinepy.html#splinepy.utils.raster_points"><code class="docutils literal notranslate"><span class="pre">raster_points()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modulesandabstract.html#splinepy-spline">splinepy._spline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.InputDimensionError"><code class="docutils literal notranslate"><span class="pre">InputDimensionError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline"><code class="docutils literal notranslate"><span class="pre">Spline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.__init__"><code class="docutils literal notranslate"><span class="pre">Spline.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.whatami"><code class="docutils literal notranslate"><span class="pre">Spline.whatami</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.para_dim"><code class="docutils literal notranslate"><span class="pre">Spline.para_dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.dim"><code class="docutils literal notranslate"><span class="pre">Spline.dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.degrees"><code class="docutils literal notranslate"><span class="pre">Spline.degrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.knot_vectors"><code class="docutils literal notranslate"><span class="pre">Spline.knot_vectors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.control_points"><code class="docutils literal notranslate"><span class="pre">Spline.control_points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.parametric_bounds"><code class="docutils literal notranslate"><span class="pre">Spline.parametric_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.control_point_bounds"><code class="docutils literal notranslate"><span class="pre">Spline.control_point_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.skip_update"><code class="docutils literal notranslate"><span class="pre">Spline.skip_update</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.basis_functions"><code class="docutils literal notranslate"><span class="pre">Spline.basis_functions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.clear"><code class="docutils literal notranslate"><span class="pre">Spline.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.control_mesh_resolutions"><code class="docutils literal notranslate"><span class="pre">Spline.control_mesh_resolutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id0"><code class="docutils literal notranslate"><span class="pre">Spline.control_point_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id1"><code class="docutils literal notranslate"><span class="pre">Spline.control_points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.copy"><code class="docutils literal notranslate"><span class="pre">Spline.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.cps"><code class="docutils literal notranslate"><span class="pre">Spline.cps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id2"><code class="docutils literal notranslate"><span class="pre">Spline.degrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.derivative"><code class="docutils literal notranslate"><span class="pre">Spline.derivative()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id3"><code class="docutils literal notranslate"><span class="pre">Spline.dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.ds"><code class="docutils literal notranslate"><span class="pre">Spline.ds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.elevate_degree"><code class="docutils literal notranslate"><span class="pre">Spline.elevate_degree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.evaluate"><code class="docutils literal notranslate"><span class="pre">Spline.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.export"><code class="docutils literal notranslate"><span class="pre">Spline.export()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.insert_knots"><code class="docutils literal notranslate"><span class="pre">Spline.insert_knots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.knot_vector_bounds"><code class="docutils literal notranslate"><span class="pre">Spline.knot_vector_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id4"><code class="docutils literal notranslate"><span class="pre">Spline.knot_vectors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.kvs"><code class="docutils literal notranslate"><span class="pre">Spline.kvs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.nearest_pcoord"><code class="docutils literal notranslate"><span class="pre">Spline.nearest_pcoord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.nearest_pcoord_midpoint"><code class="docutils literal notranslate"><span class="pre">Spline.nearest_pcoord_midpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.normalize_knot_vectors"><code class="docutils literal notranslate"><span class="pre">Spline.normalize_knot_vectors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id5"><code class="docutils literal notranslate"><span class="pre">Spline.para_dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id6"><code class="docutils literal notranslate"><span class="pre">Spline.parametric_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.permute_parametric_axes"><code class="docutils literal notranslate"><span class="pre">Spline.permute_parametric_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.reduce_degree"><code class="docutils literal notranslate"><span class="pre">Spline.reduce_degree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.remove_knots"><code class="docutils literal notranslate"><span class="pre">Spline.remove_knots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.required_properties"><code class="docutils literal notranslate"><span class="pre">Spline.required_properties</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.sample"><code class="docutils literal notranslate"><span class="pre">Spline.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id7"><code class="docutils literal notranslate"><span class="pre">Spline.skip_update</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.todict"><code class="docutils literal notranslate"><span class="pre">Spline.todict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.unique_knots"><code class="docutils literal notranslate"><span class="pre">Spline.unique_knots</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.weights"><code class="docutils literal notranslate"><span class="pre">Spline.weights</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#id8"><code class="docutils literal notranslate"><span class="pre">Spline.whatami</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modulesandabstract.html#splinepy._spline.Spline.ws"><code class="docutils literal notranslate"><span class="pre">Spline.ws</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CONTRIBUTING.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jaewook Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

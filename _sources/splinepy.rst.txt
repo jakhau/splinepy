@@ -1,0 +1,73 @@
+
+splinepy
+========
+
+
+.. toctree::
+   :maxdepth: 4
+
+   splinepy.io
+
+
+
+splinepy.bezier
+---------------
+
+.. automodule:: splinepy.bezier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.bspline
+----------------
+
+.. automodule:: splinepy.bspline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.load
+-------------
+
+.. automodule:: splinepy.load
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.log
+------------
+
+.. automodule:: splinepy.log
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.nurbs
+--------------
+
+.. automodule:: splinepy.nurbs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.rational\_bezier
+-------------------------
+
+.. automodule:: splinepy.rational_bezier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+splinepy.utils
+--------------
+
+.. automodule:: splinepy.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
